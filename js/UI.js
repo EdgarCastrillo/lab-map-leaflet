@@ -1,75 +1,85 @@
 class UI {
   constructor() {
-    // Api instance
-    this.api = new API()
-    // Create markers with layerGroup
-    this.markers = new L.LayerGroup()
+    // Instanciar la API
+    this.api = new API();
+    
+    // Crear los mapas en un grupo
+    this.markers = new L.LayerGroup(); 
+    
     // Iniciar el mapa
-    this.mapa = this.inicializarMapa();
+    this.mapa = this.startMap();
 
   }
 
-  inicializarMapa() {
-       // Inicializar y obtener la propiedad del mapa
-       const map = L.map('mapa').setView([19.390519, -99.3739778], 6);
-       const enlaceMapa = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-       L.tileLayer(
-           'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-           attribution: '&copy; ' + enlaceMapa + ' Contributors',
-           maxZoom: 18,
-           }).addTo(map);
-       return map;
+  startMap() {
+    // Inicializar y obtener la propiedad del mapa
+    const map = L.map('mapa').setView([19.390519, -99.3739778], 6);
+
+    const enlaceMapa = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+
+    L.tileLayer(
+      'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; ' + enlaceMapa + ' Contributors',
+      maxZoom: 18,
+      }).addTo(map);
+
+    return map;
 
   }
 
+  // Mostrar Establecimientos de la api
   showShops() {
     this.api.getData()
-      .then(data => {
-        const result = data.responseJSON.results
-
-        // start function to show pins
-        this.showPins(result)
-      })
+      .then(data =>  {
+          const result = data.responseJSON.results;
+          // Muestra los pines en el Mapa
+          this.showPins(result);
+      } )
   }
+  // Muestra los pines
   showPins(data) {
-    // Clean markers
-    this.markers.clearLayers()
-    //
+    this.markers.clearLayers();
+  
+    // Recorrer establecimientos
     data.forEach(data => {
-      // desturcturing
-      const {latitude, longitude, calle, regular, premium} = data
-      //Creat popup
-      const optionPopup = L.popup()
-        .setContent(`
-        <p>Calle: ${calle}
-        <p>Regular: ${regular}
-        <p>Premium: ${premium}
-        `)
-      // Add pin
+      // Destucturing 
+      const {latitude, longitude, calle, regular, premium} = data;
+
+      const optionsPopUp = L.popup()
+      .setContent(`
+        <p>Calle: ${calle}</p> 
+        <p></p><b>Regular:</b>$ ${regular}</p>
+        <p> <b>Premium:</b>$ ${premium}</p>`);
+
+      // Agregar el Pin
       const marker = new L.marker([
         parseFloat(latitude),
         parseFloat(longitude)
-      ]).bindPopup(optionPopup)
-      this.markers.addLayer(marker)
-    })
+      ] )
+      .bindPopup(optionsPopUp)
+
+      this.markers.addLayer(marker); 
+    });
     this.markers.addTo(this.mapa)
   }
-  // Searcher
-  getSuggestions(search) {
-    this.api.getData()
-      .then(data => {
-        // Get data
-        const results = data.responseJSON.results
-        // send Json and search for filtering
-        this.filterSuggestions(results, search)
-      })
-    }
-  // Filtering input suggestions
-  filterSuggestions(result, search) {
-    // filter with .filter
-    const filter = result.filter(filter => filter.calle.indexOf(search) !== -1)
-    console.log(filter)
-    // show the pins
 
+   // Obtiene las sugerencias de la REST API
+   getSuggest(search) {
+    this.api.getData()
+      .then(data => {
+            // Obtener los resultados
+            const results = data.responseJSON.results;
+
+            // Enviar el JSON y la busqueda al Filtro
+            this.filterSuggest(results, search);
+      })
+  }
+
+  // Filtrar las sugerencias de busqueda
+   filterSuggest(results, search) {
+    const filter = results.filter( filter => filter.calle.indexOf(search) !== -1 );
+
+    // Mostrar pines del Filtro
+    this.showPins(filter);
   }
 }

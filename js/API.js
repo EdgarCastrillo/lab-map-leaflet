@@ -1,17 +1,14 @@
-'use stric'
-
 class API {
-    async getData() {
-        const total = 1000
+  async getData() {
+    // Obtener desde la API
+    const data = await fetch('https://api.datos.gob.mx/v1/precio.gasolina.publico');
 
-        // get data to Api
-        const data = await fetch(`https://api.datos.gob.mx/v1/precio.gasolina.publico?pageSize=${total}`)
+    // Retornar como JSON
+    const responseJSON = await data.json();
 
-        // return data as Json
-        const responseJSON = await data.json()
-
-        return{
-            responseJSON
-        }
+    // Retornar el objeto
+    return {
+        responseJSON
     }
+  }
 }

@@ -1,20 +1,22 @@
-'use strict'
+// Instanciar ambas clases
 
-const ui = new UI()
+const ui = new UI();
 
 document.addEventListener('DOMContentLoaded', () => {
-  ui.showShops()
+  ui.showShops();
 })
 
-// Enable search shops
-const searcher = document.querySelector('#buscar input')
-searcher.addEventListener('input', () => {
-  console.log(searcher.value)
-  if(searcher.value.lenght > 5){
-  // Find in the api
-  ui.getSuggestions(searcher.value)
-  } else {
-    ui.showShops()
+// Habilitar búsqueda en vivo.
+
+const finder = document.querySelector('#buscar input');
+
+finder.addEventListener('input', () => {
+  // Si es mayor a 5, buscar sugerencias
+  if(finder.value.length > 3) {
+      // Obtener sugerencias que sean parte de la busqueda
+      ui.getSuggest(finder.value);
+  } else if(finder.value.length === 0) {
+      // Mostrar los pines
+      ui.showShops();
   }
-
-})
+});
