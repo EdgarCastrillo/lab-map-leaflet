@@ -2,6 +2,8 @@ class UI {
   constructor() {
     // Api instance
     this.api = new API()
+    // Create markers with layerGroup
+    this.markers = new L.LayerGroup()
     // Iniciar el mapa
     this.mapa = this.inicializarMapa();
 
@@ -30,6 +32,19 @@ class UI {
       })
   }
   showPins(data) {
-    console.log(data)
+    // Clean markers
+    this.markers.clearLayers()
+    //
+    data.forEach(data => {
+      // desturcturing
+      const {latitude, longitude, calle, regular, premium} = data
+      // Add pin
+      const marker = new L.marker([
+        parseFloat(latitude),
+        parseFloat(longitude)
+      ])
+      this.markers.addLayer(marker)
+    })
+    this.markers.addTo(this.mapa)
   }
 }
