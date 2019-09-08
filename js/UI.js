@@ -54,4 +54,22 @@ class UI {
     })
     this.markers.addTo(this.mapa)
   }
+  // Searcher
+  getSuggestions(search) {
+    this.api.getData()
+      .then(data => {
+        // Get data
+        const results = data.responseJSON.results
+        // send Json and search for filtering
+        this.filterSuggestions(results, search)
+      })
+    }
+  // Filtering input suggestions
+  filterSuggestions(result, search) {
+    // filter with .filter
+    const filter = result.filter(filter => filter.calle.indexOf(search) !== -1)
+    console.log(filter)
+    // show the pins
+
+  }
 }
