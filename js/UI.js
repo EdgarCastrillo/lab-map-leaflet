@@ -21,6 +21,15 @@ class UI {
   }
 
   showShops() {
+    this.api.getData()
+      .then(data => {
+        const result = data.responseJSON.results
 
+        // start function to show pins
+        this.showPins(result)
+      })
+  }
+  showPins(data) {
+    console.log(data)
   }
 }

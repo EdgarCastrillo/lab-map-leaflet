@@ -2,8 +2,10 @@
 
 class API {
     async getData() {
+        const total = 11000
+
         // get data to Api
-        const data = await fetch('https://api.datos.gob.mx/v1/precio.gasolina.publico')
+        const data = await fetch(`https://api.datos.gob.mx/v1/precio.gasolina.publico?pageSize=${total}`)
 
         // return data as Json
         const responseJSON = await data.json()
